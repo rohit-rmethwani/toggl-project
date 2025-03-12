@@ -9,12 +9,11 @@ const ProjectCard = () => {
     const [totalHours, setTotalHours] = useState('00');
     const [timerButtonState, setTimerButtonState] = useState(0);
 
-    const [data, setData] = useState({});
+    // const [data, setData] = useState({});
 
     var totalSeconds = 0;
 
     //Utilities functions
-
     function pad(val) {
         var valString = val + "";
         if (valString.length < 2) {
@@ -30,20 +29,30 @@ const ProjectCard = () => {
         setTotalHours(pad(parseInt(totalSeconds / 60)));
     }
 
-    function handleTimerButton () {
-        
-        var tempTimerButtonState = timerButtonState;
+    function commitDataToStorage(data){
+        console.log("Commiting to storage");
+        localStorage.setItem("Time elapsed: ", data);
+        console.log(data);
+        console.log(localStorage.getItem("Time elapsed"));
+    }
 
+    function fetchDataFromStorage(){
+        console.log(localStorage.getItem("Time elapsed"));
+    }
+
+    //Event Handler
+    function handleTimerButton () {
+        var tempTimerButtonState = timerButtonState;
         if(tempTimerButtonState == 0){
             tempTimerButtonState = 1;
             setTimerId(setInterval(setTime, 1000));
             setTimerButtonState(tempTimerButtonState);
         }
         else{
-            console.log("Stop timer");
             tempTimerButtonState = 0;
             setTimerButtonState(tempTimerButtonState);
             clearInterval(timerId);
+            commitDataToStorage({seconds: totalMinutes, minutes: totalHours});
         }
     }
 
@@ -79,10 +88,12 @@ const ProjectCard = () => {
                         </Stack>
                     </Stack>
 
-                    {{timerButtonState} ? <Button variant="outline-success" className="w-100" onClick={handleTimerButton}>Start Timer</Button> : <Button variant="outline-danger" className="w-100" onClick={handleTimerButton}>Stop Timer</Button>}
+                    {/* {{timerButtonState} ? <span>I am on</span> : <span>I am off</span>}
 
-                    {/* <Button variant="outline-success" className="w-100" onClick={handleTimerButton}>Start Timer</Button> */}
-
+                    {{timerButtonState} ? <Button variant="outline-success" className="w-100" onClick={handleTimerButton}>Start Timer</Button> : <Button variant="outline-danger" className="w-100" onClick={handleTimerButton}>Stop Timer</Button>} */}
+                    
+                    <Button variant="outline-success" className="w-100" onClick={handleTimerButton}>{{timerButtonState} ? 'Start Timer' : 'Stop Timer'}</Button>
+                    
                 </Stack>
             </Card.Body>
         </Card>  
