@@ -1,10 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
 import {Card, Stack,Badge, Button } from "react-bootstrap";
 
 
 const ProjectCard = () => {
+
+    const [timerId, setTimerId] = useState(0);
+    const [totalMinutes, setTotalMinutes] = useState('00');
+    const [totalHours, setTotalHours] = useState('00');
+    const [timerButtonState, setTimerButtonState] = useState(0);
+
+    const [data, setData] = useState({});
+
+    var totalSeconds = 0;
+
+    //Utilities functions
+
+    function pad(val) {
+        var valString = val + "";
+        if (valString.length < 2) {
+          return "0" + valString;
+        } else {
+          return valString;
+        }
+      }
+
+    function setTime(){
+        ++totalSeconds;
+        setTotalMinutes(pad(totalSeconds % 60));
+        setTotalHours(pad(parseInt(totalSeconds / 60)));
+    }
+
+    function handleTimerButton () {
+        
+        var tempTimerButtonState = timerButtonState;
+
+        if(tempTimerButtonState == 0){
+            tempTimerButtonState = 1;
+            setTimerId(setInterval(setTime, 1000));
+            setTimerButtonState(tempTimerButtonState);
+        }
+        else{
+            console.log("Stop timer");
+            tempTimerButtonState = 0;
+            setTimerButtonState(tempTimerButtonState);
+            clearInterval(timerId);
+        }
+    }
+
     return(
-        <Card border="primary" className="m-1 p-0">
+        <Card border="primary" className="m-0 p-0 w-100">
             <Card.Header>
                 <Stack direction="horizontal" className="justify-content-between">
                     <h3>Project title</h3>
@@ -15,7 +59,7 @@ const ProjectCard = () => {
                 <Stack direction="vertical" className="align-items-start">
                     <Card.Text>This is a description</Card.Text>
                     
-                    <h1 className="align-self-center">00:00:00</h1>
+                    <h1 className="align-self-center">{totalHours}:{totalMinutes}</h1>
                     
                     <Stack direction="horizontal" className="justify-content-between">
                         <Badge bg="primary">Ongoing</Badge>
@@ -35,7 +79,9 @@ const ProjectCard = () => {
                         </Stack>
                     </Stack>
 
-                    <Button variant="outline-success" className="w-100">Start Timer</Button>
+                    {{timerButtonState} ? <Button variant="outline-success" className="w-100" onClick={handleTimerButton}>Start Timer</Button> : <Button variant="outline-danger" className="w-100" onClick={handleTimerButton}>Stop Timer</Button>}
+
+                    {/* <Button variant="outline-success" className="w-100" onClick={handleTimerButton}>Start Timer</Button> */}
 
                 </Stack>
             </Card.Body>
