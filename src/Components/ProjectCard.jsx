@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import {Card, Stack,Badge, Button } from "react-bootstrap";
 
 
-const ProjectCard = () => {
+const ProjectCard = ({initialData}) => {
 
+    console.log(initialData);
+
+    //Variables
     const [timerId, setTimerId] = useState(0);
-    const [totalMinutes, setTotalMinutes] = useState('00');
-    const [totalHours, setTotalHours] = useState('00');
+    const [totalMinutes, setTotalMinutes] = useState(initialData.minutes);
+    const [totalHours, setTotalHours] = useState(initialData.seconds);
     const [timerButtonState, setTimerButtonState] = useState(false);
-
-    // const [data, setData] = useState({});
+    const [data, setData] = useState(initialData);
 
     var totalSeconds = 0;
 
@@ -31,9 +33,6 @@ const ProjectCard = () => {
 
     function commitDataToStorage(data){
         console.log("Commiting to storage");
-        localStorage.setItem("Time elapsed: ", data);
-        console.log(data);
-        console.log(localStorage.getItem("Time elapsed"));
     }
 
     function fetchDataFromStorage(){
@@ -57,18 +56,18 @@ const ProjectCard = () => {
         <Card border="primary" className="m-0 p-0 w-100">
             <Card.Header>
                 <Stack direction="horizontal" className="justify-content-between">
-                    <h3>Project title</h3>
-                    <h4>$21</h4>
+                    <h3>{data.name}</h3>
+                    <h4>{data.price_per_hour}</h4>
                 </Stack>
             </Card.Header>
             <Card.Body>
                 <Stack direction="vertical" className="align-items-start">
-                    <Card.Text>This is a description</Card.Text>
+                    <Card.Text>{data.description}</Card.Text>
                     
                     <h1 className="align-self-center">{totalHours}:{totalMinutes}</h1>
                     
                     <Stack direction="horizontal" className="justify-content-between">
-                        <Badge bg="primary">Ongoing</Badge>
+                        <Badge bg="primary">{data.status}</Badge>
                         <Stack direction="horizontal" className="justify-content-start">
                             <Button variant="outline-danger" className="m-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">

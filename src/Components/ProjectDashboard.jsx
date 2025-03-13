@@ -7,10 +7,17 @@ import {Container, Row, Col} from "react-bootstrap";
 const ProjectDashboard = () => {
 
     //Variables
+    
+    //For form
     const projectName = useRef('');
     const projectDesc = useRef('');
     const pricePerHour = useRef('');
     const projectStatus = useRef('');  
+
+    //For project card
+    const timeSeconds = useRef('');
+    const timeMinutes = useRef('');
+
 
     //State Variable
     const [projectData, setProjectData] = useState(JSON.parse(localStorage.getItem("Toggl")) ?? []);
@@ -30,7 +37,6 @@ const ProjectDashboard = () => {
     //Saving to local storage
     useEffect(()=>{
         if(!init){
-            console.log("Inside If of useEffect", projectData)
             localStorage.setItem("Toggl", JSON.stringify(projectData));
         }
         else{
@@ -38,14 +44,13 @@ const ProjectDashboard = () => {
         }
     }, [projectData]);
 
-
     //Render code
     return(
         <>
             <ProjectHeader/>
             <Container fluid className="py-3">
                 <Row>
-                    <Col xs={8}><ProjectCardList projectsData={projectData}/></Col>
+                    <Col xs={8}><ProjectCardList projectsData={projectData} secondsRef={timeSeconds} minutesRef={timeMinutes}/></Col>
                     <Col xs={4}><ProjectForm nameRef={projectName} descRef={projectDesc} priceRef={pricePerHour} statusRef={projectStatus} onHandleSave={handleSaveEvent}/></Col>
                 </Row>
             </Container>
