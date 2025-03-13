@@ -7,7 +7,7 @@ const ProjectCard = () => {
     const [timerId, setTimerId] = useState(0);
     const [totalMinutes, setTotalMinutes] = useState('00');
     const [totalHours, setTotalHours] = useState('00');
-    const [timerButtonState, setTimerButtonState] = useState(0);
+    const [timerButtonState, setTimerButtonState] = useState(false);
 
     // const [data, setData] = useState({});
 
@@ -42,15 +42,12 @@ const ProjectCard = () => {
 
     //Event Handler
     function handleTimerButton () {
-        var tempTimerButtonState = timerButtonState;
-        if(tempTimerButtonState == 0){
-            tempTimerButtonState = 1;
+        if(!timerButtonState){
             setTimerId(setInterval(setTime, 1000));
-            setTimerButtonState(tempTimerButtonState);
+            setTimerButtonState(true);
         }
         else{
-            tempTimerButtonState = 0;
-            setTimerButtonState(tempTimerButtonState);
+            setTimerButtonState(false);
             clearInterval(timerId);
             commitDataToStorage({seconds: totalMinutes, minutes: totalHours});
         }
@@ -87,12 +84,8 @@ const ProjectCard = () => {
                             </Button>
                         </Stack>
                     </Stack>
-
-                    {/* {{timerButtonState} ? <span>I am on</span> : <span>I am off</span>}
-
-                    {{timerButtonState} ? <Button variant="outline-success" className="w-100" onClick={handleTimerButton}>Start Timer</Button> : <Button variant="outline-danger" className="w-100" onClick={handleTimerButton}>Stop Timer</Button>} */}
                     
-                    <Button variant="outline-success" className="w-100" onClick={handleTimerButton}>{{timerButtonState} ? 'Start Timer' : 'Stop Timer'}</Button>
+                    <Button variant={!timerButtonState ? "outline-success" : "outline-danger"} className="w-100" onClick={handleTimerButton}>{!timerButtonState ? 'Start Timer' : 'Stop Timer'}</Button>
                     
                 </Stack>
             </Card.Body>
