@@ -12,8 +12,6 @@ const ProjectForm = ({onHandleSave, nameRef, descRef, priceRef, statusRef, id}) 
         }
     }, [id]);
 
-    console.log(tempData);
-
     return(
         <div className="">
             <h1 className="mb-4">{id ? "Update Project" : "Add Project"}</h1>
@@ -45,8 +43,8 @@ const ProjectForm = ({onHandleSave, nameRef, descRef, priceRef, statusRef, id}) 
                             Status
                         </Form.Label>
                         <Form.Select aria-label="" ref={statusRef} defaultValue={id?tempData.status:""}>
-                            <option value="completed">Completed</option>
-                            <option value="ongoing">Ongoing</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Ongoing">Ongoing</option>
                         </Form.Select>
                     </Form.Group>
 

@@ -7,6 +7,7 @@ import getData from "./Custom Hooks/getData";
 import getIDData from "./Custom Hooks/getIDData";
 import putData from "./Custom Hooks/putData";
 import postData from "./Custom Hooks/postData";
+import removeData from "./Custom Hooks/removeData";
 
 const ProjectDashboard = () => {
     
@@ -28,10 +29,11 @@ const ProjectDashboard = () => {
             setProjectData([...projectData, {id: randomId, name: projectName.current.value, description: projectDesc.current.value, price_per_hour: pricePerHour.current.value, status: projectStatus.current.value, elapsed: 0}]);
         }
         else{
-            console.log("This is update");
             const updateTemp = {id: parseInt(dataId), name: projectName.current.value, description: projectDesc.current.value, price_per_hour: pricePerHour.current.value, status: projectStatus.current.value, elapsed: getIDData(dataId).elapsed};
             putData(updateTemp);
             setDataId("");
+            setInit(false);
+            setProjectData(getData());
         }
         projectName.current.value = "";
         projectDesc.current.value = "";
@@ -46,13 +48,16 @@ const ProjectDashboard = () => {
     }
 
     function handleDeleteACtion(evt){
-        console.log(evt.currentTarget.getAttribute("data-id"));
-        console.log("Delete button called");
+        removeData(parseInt(evt.currentTarget.getAttribute("data-id")));
+        setInit(false);
+        setProjectData(getData());
     }
 
     //Saving to local storage
     useEffect(()=>{
-        postData(projectData);
+        if(init){
+            postData(projectData);
+        }
     }, [projectData]);
 
     //Render code
