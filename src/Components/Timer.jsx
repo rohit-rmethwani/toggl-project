@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const Timer = ({totalMinutes, totalSeconds}) => {
+const Timer = ({state, initialData}) => {
 
     //Variables
     const [timerId, setTimerId] = useState(0);
-    const [minutes, setMinutes] = useState(initialData.minutes);
-    const [seconds, setSeconds] = useState(initialData.seconds);
-
+    const [totalMinutes, setTotalMinutes] = useState("00");
+    const [totalHours, setTotalHours] = useState("00"); 
+    const [init, setInit] = useState(false);
+    var totalSeconds = totalMinutes;
 
     //Utilities functions
     function pad(val) {
@@ -19,14 +20,23 @@ const Timer = ({totalMinutes, totalSeconds}) => {
       }
 
     function setTime(){
-        ++totalSeconds;
-        setMinutes(pad(totalSeconds % 60));
-        setSeconds(pad(parseInt(totalSeconds / 60)));
+        setTotalMinutes(++totalSeconds);
     }
-    
+
+    useEffect(()=>{
+
+      if(state){
+        setTimerId(setInterval(setTime, 1000));
+      }
+      else{
+        setTotalMinutes(totalSeconds);
+        clearInterval(timerId);
+      }
+      
+    },[state]);
 
     return(
-        <h1 className="align-self-center"><span>{minutes}</span>:<span>{seconds}</span></h1>
+        <h1 className="align-self-center">00:<span>{totalHours}</span>:<span>{totalMinutes}</span></h1>
     );
 
 }

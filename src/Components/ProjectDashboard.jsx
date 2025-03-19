@@ -3,10 +3,12 @@ import ProjectHeader from "./ProjectHeader";
 import ProjectForm from "./ProjectForm";
 import ProjectCardList from "./ProjectCardList";
 import {Container, Row, Col} from "react-bootstrap";
+import getData from "./Custom Hooks/getData";
+import getIDData from "./Custom Hooks/getIDData";
+import putData from "./Custom Hooks/putData";
+import postData from "./Custom Hooks/postData";
 
 const ProjectDashboard = () => {
-
-    //Variables
     
     //For form
     const projectName = useRef('');
@@ -14,34 +16,43 @@ const ProjectDashboard = () => {
     const pricePerHour = useRef('');
     const projectStatus = useRef('');  
 
-    //For project card
-    const timeSeconds = useRef('');
-    const timeMinutes = useRef('');
-
-
     //State Variable
-    const [projectData, setProjectData] = useState(JSON.parse(localStorage.getItem("Toggl")) ?? []);
+    const [projectData, setProjectData] = useState(getData()??[]);
     const [init, setInit] = useState(true);
+    const [dataId, setDataId] = useState("");
 
     //Event Handler for Form
     function handleSaveEvent(){
-        const randomId = Math.floor(Math.random() * 1000);
-        setProjectData([...projectData, 
-            {id: randomId, name: projectName.current.value, description: projectDesc.current.value, price_per_hour: pricePerHour.current.value, status: projectStatus.current.value, seconds: "00", minutes: "00"}]);
+        if(!dataId){
+            const randomId = Math.floor(Math.random() * 1000);
+            setProjectData([...projectData, {id: randomId, name: projectName.current.value, description: projectDesc.current.value, price_per_hour: pricePerHour.current.value, status: projectStatus.current.value, elapsed: 0}]);
+        }
+        else{
+            console.log("This is update");
+            const updateTemp = {id: parseInt(dataId), name: projectName.current.value, description: projectDesc.current.value, price_per_hour: pricePerHour.current.value, status: projectStatus.current.value, elapsed: getIDData(dataId).elapsed};
+            putData(updateTemp);
+            setDataId("");
+        }
         projectName.current.value = "";
         projectDesc.current.value = "";
         pricePerHour.current.value = "";
-        projectStatus.current.value = "";
+        projectStatus.current.value = "Completed";
+    }
+
+    //Event handler for project card 
+    function handleEditAction(evt){
+        const uId = evt.currentTarget.getAttribute("data-id");
+        setDataId(uId);
+    }
+
+    function handleDeleteACtion(evt){
+        console.log(evt.currentTarget.getAttribute("data-id"));
+        console.log("Delete button called");
     }
 
     //Saving to local storage
     useEffect(()=>{
-        if(!init){
-            localStorage.setItem("Toggl", JSON.stringify(projectData));
-        }
-        else{
-            setInit(false);
-        }
+        postData(projectData);
     }, [projectData]);
 
     //Render code
@@ -50,8 +61,8 @@ const ProjectDashboard = () => {
             <ProjectHeader/>
             <Container fluid className="py-3">
                 <Row>
-                    <Col xs={8}><ProjectCardList projectsData={projectData} secondsRef={timeSeconds} minutesRef={timeMinutes}/></Col>
-                    <Col xs={4}><ProjectForm nameRef={projectName} descRef={projectDesc} priceRef={pricePerHour} statusRef={projectStatus} onHandleSave={handleSaveEvent}/></Col>
+                    <Col xs={8}><ProjectCardList projectsData={projectData} handleEditAction={handleEditAction} handleDeleteAction={handleDeleteACtion}/></Col>
+                    <Col xs={4}><ProjectForm nameRef={projectName} descRef={projectDesc} priceRef={pricePerHour} statusRef={projectStatus} onHandleSave={handleSaveEvent} id={dataId} /></Col>
                 </Row>
             </Container>
         </>
