@@ -46,7 +46,7 @@ const ProjectCard = ({initialData, handleEditAction, handleDeleteAction}) => {
                 <Stack direction="vertical" className="align-items-start">
                     <Card.Text>{data.description}</Card.Text>
                     
-                    <Timer state={timerButtonState} initialData={initialData}/>
+                    <Timer state={timerButtonState} elapsed={timeElapsed}/>
 
                     <Stack direction="horizontal" className="justify-content-between">
                         <Badge bg={initialData.status == "Ongoing" ? "info" : "success"}>{data.status}</Badge>

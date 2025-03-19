@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 
-const Timer = ({state, initialData}) => {
+const Timer = ({state, elapsed}) => {
 
     //Variables
     const [timerId, setTimerId] = useState(0);
-    const [totalMinutes, setTotalMinutes] = useState("00");
-    const [totalHours, setTotalHours] = useState("00"); 
+    const [totalHours, setTotalHours] = useState("00");
+    const [totalSeconds, setTotalSeconds] = useState("00");
+    const [totalMinutes, setTotalMinutes] = useState("00"); 
     const [init, setInit] = useState(false);
-    var totalSeconds = totalMinutes;
-
+    var secs = totalMinutes;
+  
     //Utilities functions
     function pad(val) {
         var valString = val + "";
@@ -20,23 +21,21 @@ const Timer = ({state, initialData}) => {
       }
 
     function setTime(){
-        setTotalMinutes(++totalSeconds);
+        setTotalSeconds(++secs);
     }
 
     useEffect(()=>{
-
       if(state){
         setTimerId(setInterval(setTime, 1000));
       }
       else{
-        setTotalMinutes(totalSeconds);
+        setTotalSeconds(totalSeconds);
         clearInterval(timerId);
       }
-      
     },[state]);
 
     return(
-        <h1 className="align-self-center">00:<span>{totalHours}</span>:<span>{totalMinutes}</span></h1>
+        <h1 className="align-self-center">{totalHours}:{totalMinutes}:{totalSeconds}</h1>
     );
 
 }
